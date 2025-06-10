@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefHeight="800.0" prefWidth="600" styleClass="anchor-pane" stylesheets="@../styles/style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="controllers.CadastroController">
+
+    <VBox layoutX="10.0" layoutY="150.0" prefHeight="800.0" prefWidth="600.0" spacing="10" style="-fx-background-color: white;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <Label style="-fx-font-size: 20px; -fx-font-weight: bold" text="Cadastro de Militar" />
+
+        <TextField fx:id="saramField" promptText="Saram" />
+        <TextField fx:id="nomeCompletoField" promptText="Nome Completo" />
+
+        <ComboBox fx:id="postoBox" promptText="Patente">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Recruta" />
+                    <String fx:value="Soldado" />
+                    <String fx:value="Cabo" />
+                    <String fx:value="3º Sargento" />
+                    <String fx:value="2º Sargento" />
+                    <String fx:value="1º Sargento" />
+                    <String fx:value="Subtenente" />
+                    <String fx:value="Aspirante" />
+                    <String fx:value="2º Tenente" />
+                    <String fx:value="1º Tenente" />
+                    <String fx:value="Capitão" />
+                    <String fx:value="Major" />
+                    <String fx:value="Tenente-Coronel" />
+                    <String fx:value="Coronel" />
+                    <String fx:value="General de Brigada" />
+                    <String fx:value="General de Divisão" />
+                    <String fx:value="General de Exército" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <DatePicker fx:id="dataAdmissaoField" promptText="Data de Admissão" />
+        <TextField fx:id="cpfField" promptText="CPF" />
+
+        <ComboBox fx:id="sexoBox" promptText="Sexo">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Masculino" />
+                    <String fx:value="Feminino" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <DatePicker fx:id="dataNascimentoField" promptText="Data de Nascimento" />
+        <TextField fx:id="naturalidadeField" promptText="Naturalidade" />
+
+        <ComboBox fx:id="quadroBox" promptText="Quadro">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Infantaria" />
+                    <String fx:value="Engenharia" />
+                    <String fx:value="Saúde" />
+                    <String fx:value="Comunicações" />
+                    <String fx:value="Intendência" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <TextField fx:id="unidadeField" promptText="Unidade" />
+
+        <ComboBox fx:id="situacaoBox" promptText="Situação Atual">
+            <items>
+                <FXCollections fx:factory="observableArrayList">
+                    <String fx:value="Ativo" />
+                    <String fx:value="Reserva" />
+                    <String fx:value="Reformado" />
+                    <String fx:value="Desligado" />
+                </FXCollections>
+            </items>
+        </ComboBox>
+
+        <HBox alignment="CENTER_RIGHT" spacing="10">
+            <Button onAction="#salvar" text="Salvar" />
+            <Button onAction="#cancelar" text="Cancelar" />
+        </HBox>
+    </VBox>
+</AnchorPane>
