@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+//v1.0
+
 public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
