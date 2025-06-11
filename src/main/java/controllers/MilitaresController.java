@@ -14,6 +14,7 @@ import models.Militar;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class MilitaresController {
@@ -30,6 +31,27 @@ public class MilitaresController {
 
     private static final ObservableList<Militar> lista = FXCollections.observableArrayList();
 
+
+    private static final Map<String, Integer> hierarquiaPatente = Map.ofEntries(
+            Map.entry("Recruta", 1),
+            Map.entry("Soldado", 2),
+            Map.entry("Cabo", 3),
+            Map.entry("3º Sargento", 4),
+            Map.entry("2º Sargento", 5),
+            Map.entry("1º Sargento", 6),
+            Map.entry("Subtenente", 7),
+            Map.entry("Aspirante", 8),
+            Map.entry("2º Tenente", 9),
+            Map.entry("1º Tenente", 10),
+            Map.entry("Capitão", 11),
+            Map.entry("Major", 12),
+            Map.entry("Tenente-Coronel", 13),
+            Map.entry("Coronel", 14),
+            Map.entry("General de Brigada", 15),
+            Map.entry("General de Divisão", 16),
+            Map.entry("General de Exército", 17)
+    );
+
     @FXML
     public void initialize() {
         colSaram.setCellValueFactory(d -> d.getValue().saramProperty());
@@ -45,6 +67,12 @@ public class MilitaresController {
         colSituacao.setCellValueFactory(d -> d.getValue().situacaoAtualProperty());
 
         carregarDados();
+        colPosto.setComparator((a, b) -> {
+            return Integer.compare(
+                    hierarquiaPatente.getOrDefault(a, 0),
+                    hierarquiaPatente.getOrDefault(b, 0)
+            );
+        });
     }
 
     public void carregarDados() {
@@ -83,8 +111,8 @@ public class MilitaresController {
             }
             totalLabel.setText("Militares Cadastrados: " + total);
             ativosLabel.setText("Militares Ativos: " + ativos);
-            homensLabel.setText("Homens: " + homens);
-            mulheresLabel.setText("Mulheres: " + mulheres);
+            homensLabel.setText("Militares Homens: " + homens);
+            mulheresLabel.setText("Militares Mulheres: " + mulheres);
 
             tabelaMilitares.setItems(lista);
         } catch (SQLException e) {
@@ -175,6 +203,27 @@ public class MilitaresController {
             e.printStackTrace();
         }
     }
+
+    @FXML
+    public void logoff() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/login.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setTitle("Login");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+            // Fecha a janela atual
+            Stage currentStage = (Stage) tabelaMilitares.getScene().getWindow();
+            currentStage.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void atualizarMilitar(Militar m) {
         try (Connection conn = DB.getConnection();
