@@ -18,6 +18,11 @@ import java.util.function.Predicate;
 
 public class MilitaresController {
 
+    @FXML private Label totalLabel;
+    @FXML private Label ativosLabel;
+    @FXML private Label homensLabel;
+    @FXML private Label mulheresLabel;
+
     @FXML private TextField filtroField;
     @FXML private TableView<Militar> tabelaMilitares;
     @FXML private TableColumn<Militar, String> colSaram, colNome, colPosto, colAdmissao, colCpf,
@@ -44,26 +49,42 @@ public class MilitaresController {
 
     public void carregarDados() {
         lista.clear();
+        int total = 0, ativos = 0, homens = 0, mulheres = 0;
         try (Connection conn = DB.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery("SELECT * FROM militares")) {
 
             while (rs.next()) {
+                String sexo = rs.getString("sexo");
+                String situacao = rs.getString("situacaoAtual");
+
+                if (sexo.equalsIgnoreCase("Masculino")) homens++;
+                else if (sexo.equalsIgnoreCase("Feminino")) mulheres++;
+
+                if (situacao.equalsIgnoreCase("Ativo")) ativos++;
+
+                total++;
+
                 Militar m = new Militar(
                         rs.getString("saram"),
                         rs.getString("nomeCompleto"),
                         rs.getString("posto"),
                         rs.getString("dataAdmissao"),
                         rs.getString("cpf"),
-                        rs.getString("sexo"),
+                        sexo,
                         rs.getString("dataNascimento"),
                         rs.getString("naturalidade"),
                         rs.getString("quadro"),
                         rs.getString("unidade"),
-                        rs.getString("situacaoAtual")
+                        situacao
                 );
+
                 lista.add(m);
             }
+            totalLabel.setText("Militares Cadastrados: " + total);
+            ativosLabel.setText("Militares Ativos: " + ativos);
+            homensLabel.setText("Homens: " + homens);
+            mulheresLabel.setText("Mulheres: " + mulheres);
 
             tabelaMilitares.setItems(lista);
         } catch (SQLException e) {
