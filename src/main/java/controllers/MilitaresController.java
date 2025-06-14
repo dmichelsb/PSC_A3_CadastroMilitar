@@ -1,6 +1,8 @@
 package controllers;
 
-import database.DB;
+import dao.MilitarDAO;
+import dao.MilitarMissaoDAO;
+import dao.MissaoDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -11,26 +13,29 @@ import javafx.scene.control.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import models.Militar;
+import models.Missao;
 
 import java.io.IOException;
-import java.sql.*;
 import java.util.Map;
 import java.util.function.Predicate;
 
 public class MilitaresController {
 
-    @FXML private Label totalLabel;
-    @FXML private Label ativosLabel;
-    @FXML private Label homensLabel;
-    @FXML private Label mulheresLabel;
-
+    @FXML private Label totalLabel, ativosLabel, homensLabel, mulheresLabel;
     @FXML private TextField filtroField;
     @FXML private TableView<Militar> tabelaMilitares;
     @FXML private TableColumn<Militar, String> colSaram, colNome, colPosto, colAdmissao, colCpf,
             colSexo, colNascimento, colNaturalidade, colQuadro, colUnidade, colSituacao;
 
-    private static final ObservableList<Militar> lista = FXCollections.observableArrayList();
+    @FXML private TableView<Missao> tabelaMissoes;
+    @FXML private TableColumn<Missao, String> colTipo, colLocal, colInicio, colTermino, colStatus;
+    @FXML private TextArea descricaoArea;
 
+    private final MilitarDAO militarDAO = new MilitarDAO();
+    private final MilitarMissaoDAO militarMissaoDAO = new MilitarMissaoDAO();
+    private final MissaoDAO missaoDAO = new MissaoDAO();
+    private final ObservableList<Militar> lista = FXCollections.observableArrayList();
+    private final ObservableList<Missao> listaMissoes = FXCollections.observableArrayList();
 
     private static final Map<String, Integer> hierarquiaPatente = Map.ofEntries(
             Map.entry("Recruta", 1),
@@ -54,14 +59,13 @@ public class MilitaresController {
 
     @FXML
     public void initialize() {
-        tabelaMilitares.setRowFactory(tv -> new TableRow<Militar>() {
+        tabelaMilitares.setRowFactory(tv -> new TableRow<>() {
             @Override
             protected void updateItem(Militar item, boolean empty) {
                 super.updateItem(item, empty);
                 if (item == null || empty) {
                     setStyle("");
                 } else if (isSelected()) {
-                    // Quando selecionado, NÃO altera cor aqui, deixa o CSS decidir.
                     setStyle("");
                 } else if (getIndex() % 2 == 0) {
                     setStyle("-fx-background-color: #cccccc;");
@@ -70,6 +74,7 @@ public class MilitaresController {
                 }
             }
         });
+
         colSaram.setCellValueFactory(d -> d.getValue().saramProperty());
         colNome.setCellValueFactory(d -> d.getValue().nomeCompletoProperty());
         colPosto.setCellValueFactory(d -> d.getValue().postoProperty());
@@ -82,58 +87,75 @@ public class MilitaresController {
         colUnidade.setCellValueFactory(d -> d.getValue().unidadeProperty());
         colSituacao.setCellValueFactory(d -> d.getValue().situacaoAtualProperty());
 
-        carregarDados();
-        colPosto.setComparator((a, b) -> {
-            return Integer.compare(
-                    hierarquiaPatente.getOrDefault(a, 0),
-                    hierarquiaPatente.getOrDefault(b, 0)
-            );
+        colPosto.setComparator((a, b) -> Integer.compare(
+                hierarquiaPatente.getOrDefault(a, 0),
+                hierarquiaPatente.getOrDefault(b, 0)
+        ));
+
+        // Configura colunas de Missão:
+        colTipo.setCellValueFactory(d -> d.getValue().tipoProperty());
+        colLocal.setCellValueFactory(d -> d.getValue().localProperty());
+        colInicio.setCellValueFactory(d -> d.getValue().dataInicioProperty());
+        colTermino.setCellValueFactory(d -> d.getValue().dataTerminoProperty());
+        colStatus.setCellValueFactory(d -> d.getValue().statusProperty());
+
+        // Listener para descrição:
+        tabelaMissoes.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                descricaoArea.setText(newVal.getDescricao());
+            } else {
+                descricaoArea.clear();
+            }
         });
+
+        // Listener para seleção de militar carregar missões:
+        tabelaMilitares.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                carregarMissoes(newVal.getSaram());
+            } else {
+                listaMissoes.clear();
+            }
+        });
+
+        carregarDados();
     }
 
     public void carregarDados() {
         lista.clear();
-        int total = 0, ativos = 0, homens = 0, mulheres = 0;
-        try (Connection conn = DB.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT * FROM militares")) {
+        lista.addAll(militarDAO.getAll());
 
-            while (rs.next()) {
-                String sexo = rs.getString("sexo");
-                String situacao = rs.getString("situacaoAtual");
+        int total = lista.size();
+        int ativos = 0, homens = 0, mulheres = 0;
 
-                if (sexo.equalsIgnoreCase("Masculino")) homens++;
-                else if (sexo.equalsIgnoreCase("Feminino")) mulheres++;
+        for (Militar m : lista) {
+            if (m.getSexo().equalsIgnoreCase("Masculino")) homens++;
+            else if (m.getSexo().equalsIgnoreCase("Feminino")) mulheres++;
 
-                if (situacao.equalsIgnoreCase("Ativo")) ativos++;
-
-                total++;
-
-                Militar m = new Militar(
-                        rs.getString("saram"),
-                        rs.getString("nomeCompleto"),
-                        rs.getString("posto"),
-                        rs.getString("dataAdmissao"),
-                        rs.getString("cpf"),
-                        sexo,
-                        rs.getString("dataNascimento"),
-                        rs.getString("naturalidade"),
-                        rs.getString("quadro"),
-                        rs.getString("unidade"),
-                        situacao
-                );
-
-                lista.add(m);
-            }
-            totalLabel.setText("Militares Cadastrados: " + total);
-            ativosLabel.setText("Militares Ativos: " + ativos);
-            homensLabel.setText("Militares Homens: " + homens);
-            mulheresLabel.setText("Militares Mulheres: " + mulheres);
-
-            tabelaMilitares.setItems(lista);
-        } catch (SQLException e) {
-            e.printStackTrace();
+            if (m.getSituacaoAtual().equalsIgnoreCase("Ativo")) ativos++;
         }
+
+        totalLabel.setText("Militares Cadastrados: " + total);
+        ativosLabel.setText("Militares Ativos: " + ativos);
+        homensLabel.setText("Militares Homens: " + homens);
+        mulheresLabel.setText("Militares Mulheres: " + mulheres);
+
+        tabelaMilitares.setItems(lista);
+    }
+
+    @FXML
+    public void filtrar() {
+        String texto = filtroField.getText().toLowerCase();
+        Predicate<Militar> filtro = m ->
+                m.getNomeCompleto().toLowerCase().contains(texto) ||
+                        m.getSaram().toLowerCase().contains(texto);
+
+        tabelaMilitares.setItems(lista.filtered(filtro));
+    }
+
+    @FXML
+    public void limparFiltro() {
+        filtroField.clear();
+        tabelaMilitares.setItems(lista);
     }
 
     @FXML
@@ -154,30 +176,8 @@ public class MilitaresController {
         Militar m = tabelaMilitares.getSelectionModel().getSelectedItem();
         if (m == null) return;
 
-        try (Connection conn = DB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement("DELETE FROM militares WHERE saram=?")) {
-            stmt.setString(1, m.getSaram());
-            stmt.executeUpdate();
-            carregarDados();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void filtrar() {
-        String texto = filtroField.getText().toLowerCase();
-        Predicate<Militar> filtro = m ->
-                m.getNomeCompleto().toLowerCase().contains(texto) ||
-                        m.getSaram().toLowerCase().contains(texto);
-
-        tabelaMilitares.setItems(lista.filtered(filtro));
-    }
-
-    @FXML
-    public void limparFiltro() {
-        filtroField.clear();
-        tabelaMilitares.setItems(lista);
+        militarDAO.remover(m.getSaram());
+        carregarDados();
     }
 
     private void abrirFormulario(Militar militar) {
@@ -193,29 +193,9 @@ public class MilitaresController {
             stage.setScene(new Scene(root));
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();
+
             carregarDados();
         } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void inserirMilitar(Militar m) {
-        try (Connection conn = DB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO militares VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
-            stmt.setString(1, m.getSaram());
-            stmt.setString(2, m.getNomeCompleto());
-            stmt.setString(3, m.getPosto());
-            stmt.setString(4, m.getDataAdmissao());
-            stmt.setString(5, m.getCpf());
-            stmt.setString(6, m.getSexo());
-            stmt.setString(7, m.getDataNascimento());
-            stmt.setString(8, m.getNaturalidade());
-            stmt.setString(9, m.getQuadro());
-            stmt.setString(10, m.getUnidade());
-            stmt.setString(11, m.getSituacaoAtual());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -231,41 +211,73 @@ public class MilitaresController {
             stage.setScene(new Scene(root));
             stage.show();
 
-            // Fecha a janela atual
             Stage currentStage = (Stage) tabelaMilitares.getScene().getWindow();
             currentStage.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    @FXML
+    public void adicionarMissao() {
+        Militar militar = tabelaMilitares.getSelectionModel().getSelectedItem();
+        if (militar == null) return;
 
-    public static void atualizarMilitar(Militar m) {
-        try (Connection conn = DB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(
-                     "UPDATE militares SET nomeCompleto=?, posto=?, dataAdmissao=?, cpf=?, sexo=?, dataNascimento=?, naturalidade=?, quadro=?, unidade=?, situacaoAtual=? WHERE saram=?")) {
-            stmt.setString(1, m.getNomeCompleto());
-            stmt.setString(2, m.getPosto());
-            stmt.setString(3, m.getDataAdmissao());
-            stmt.setString(4, m.getCpf());
-            stmt.setString(5, m.getSexo());
-            stmt.setString(6, m.getDataNascimento());
-            stmt.setString(7, m.getNaturalidade());
-            stmt.setString(8, m.getQuadro());
-            stmt.setString(9, m.getUnidade());
-            stmt.setString(10, m.getSituacaoAtual());
-            stmt.setString(11, m.getSaram());
-            stmt.executeUpdate();
-        } catch (SQLException e) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cadastroMissao.fxml"));
+            Parent root = loader.load();
+
+            MissaoController controller = loader.getController();
+            controller.setDados(null, militar.getSaram());
+
+            Stage stage = new Stage();
+            stage.setTitle("Adicionar Missão");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+            carregarMissoes(militar.getSaram());
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-
-
-    }
-    public static ObservableList<Militar> getListaMilitares() {
-        return lista;
     }
 
+    @FXML
+    public void editarMissao() {
+        Militar militar = tabelaMilitares.getSelectionModel().getSelectedItem();
+        Missao missao = tabelaMissoes.getSelectionModel().getSelectedItem();
+        if (militar == null || missao == null) return;
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/cadastroMissao.fxml"));
+            Parent root = loader.load();
+
+            MissaoController controller = loader.getController();
+            controller.setDados(missao, militar.getSaram());
+
+            Stage stage = new Stage();
+            stage.setTitle("Editar Missão");
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+            carregarMissoes(militar.getSaram());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void removerMissao() {
+        Missao missao = tabelaMissoes.getSelectionModel().getSelectedItem();
+        if (missao == null) return;
+
+        missaoDAO.remover(missao.getId());
+        Militar militar = tabelaMilitares.getSelectionModel().getSelectedItem();
+        if (militar != null) {
+            carregarMissoes(militar.getSaram());
+        }
+    }
+
+    private void carregarMissoes(String militarSaram) {
+        listaMissoes.clear();
+        listaMissoes.addAll(militarMissaoDAO.buscarMissoesPorMilitar(militarSaram));
+        tabelaMissoes.setItems(listaMissoes);
+    }
 }

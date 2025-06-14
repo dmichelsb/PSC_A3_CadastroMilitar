@@ -1,5 +1,6 @@
 package controllers;
 
+import dao.MilitarDAO;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -22,12 +23,13 @@ public class CadastroController {
     private Militar militar;
     private boolean editando = false;
 
-    // Inicialização, se precisar popular comboBoxes, etc.
+    private final MilitarDAO militarDAO = new MilitarDAO();
+
     public void initialize() {
-        // Exemplo: postoBox.getItems().addAll("Soldado", "Cabo", "Sargento");
+        // Popular ComboBoxes se quiser
+        // postoBox.getItems().addAll("Soldado", "Cabo", "Sargento");
     }
 
-    // Preenche os campos se estiver editando um militar existente
     public void setMilitar(Militar m) {
         if (m != null) {
             this.militar = m;
@@ -51,14 +53,12 @@ public class CadastroController {
     private void salvar() {
         String novoSaram = saramField.getText().trim();
 
-        // Verifica se o campo SARAM foi preenchido
         if (novoSaram.isEmpty()) {
             showAlerta("Erro", "O campo SARAM é obrigatório!");
             return;
         }
 
-        // Verifica se já existe OUTRO militar com o mesmo SARAM (para cadastro E edição)
-        boolean saramExiste = MilitaresController.getListaMilitares()
+        boolean saramExiste = militarDAO.getAll()
                 .stream()
                 .anyMatch(m -> m.getSaram().equals(novoSaram)
                         && (militar == null || !m.getSaram().equals(militar.getSaram())));
@@ -68,7 +68,6 @@ public class CadastroController {
             return;
         }
 
-        // Monta o objeto Militar com os campos preenchidos
         Militar novo = new Militar(
                 novoSaram,
                 nomeCompletoField.getText(),
@@ -83,11 +82,10 @@ public class CadastroController {
                 situacaoBox.getValue()
         );
 
-        // Se estiver editando -> atualiza | senão -> insere
         if (editando) {
-            MilitaresController.atualizarMilitar(novo);
+            militarDAO.atualizar(novo);
         } else {
-            MilitaresController.inserirMilitar(novo);
+            militarDAO.inserir(novo);
         }
 
         fechar();
@@ -103,7 +101,6 @@ public class CadastroController {
         stage.close();
     }
 
-    // Método auxiliar para mostrar alertas de erro
     private void showAlerta(String titulo, String mensagem) {
         Alert alerta = new Alert(Alert.AlertType.ERROR);
         alerta.setTitle(titulo);

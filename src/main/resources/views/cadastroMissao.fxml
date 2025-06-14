@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.1"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controllers.MissaoController"
+      spacing="10">
+
+    <!-- Padding usando Insets -->
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Cadastro de Missão"/>
+
+    <ComboBox fx:id="tipoBox" promptText="Tipo de Missão"/>
+    <TextField fx:id="localField" promptText="Local"/>
+    <DatePicker fx:id="inicioPicker" promptText="Data de Início"/>
+    <DatePicker fx:id="terminoPicker" promptText="Data de Término"/>
+    <ComboBox fx:id="statusBox" promptText="Status"/>
+    <TextArea fx:id="descricaoArea" promptText="Descrição" prefRowCount="5"/>
+
+    <HBox spacing="10">
+        <Button text="Salvar" onAction="#salvar"/>
+        <Button text="Cancelar" onAction="#cancelar"/>
+    </HBox>
+
+</VBox>
