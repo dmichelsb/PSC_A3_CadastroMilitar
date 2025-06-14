@@ -31,7 +31,7 @@
       
                           <!-- Tabela -->
 
-             <TableView fx:id="tabelaMilitares" styleClass="tabela">
+             <TableView fx:id="tabelaMilitares" styleClass="tabela" stylesheets="@../styles/style.css">
 
              <columns>
                       <TableColumn fx:id="colSaram" prefWidth="80" text="Saram" />

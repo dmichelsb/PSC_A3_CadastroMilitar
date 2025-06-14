@@ -22,10 +22,12 @@ public class CadastroController {
     private Militar militar;
     private boolean editando = false;
 
+    // Inicialização, se precisar popular comboBoxes, etc.
     public void initialize() {
-
+        // Exemplo: postoBox.getItems().addAll("Soldado", "Cabo", "Sargento");
     }
 
+    // Preenche os campos se estiver editando um militar existente
     public void setMilitar(Militar m) {
         if (m != null) {
             this.militar = m;
@@ -47,8 +49,28 @@ public class CadastroController {
 
     @FXML
     private void salvar() {
+        String novoSaram = saramField.getText().trim();
+
+        // Verifica se o campo SARAM foi preenchido
+        if (novoSaram.isEmpty()) {
+            showAlerta("Erro", "O campo SARAM é obrigatório!");
+            return;
+        }
+
+        // Verifica se já existe OUTRO militar com o mesmo SARAM (para cadastro E edição)
+        boolean saramExiste = MilitaresController.getListaMilitares()
+                .stream()
+                .anyMatch(m -> m.getSaram().equals(novoSaram)
+                        && (militar == null || !m.getSaram().equals(militar.getSaram())));
+
+        if (saramExiste) {
+            showAlerta("Erro", "Já existe um militar com esse SARAM!");
+            return;
+        }
+
+        // Monta o objeto Militar com os campos preenchidos
         Militar novo = new Militar(
-                saramField.getText(),
+                novoSaram,
                 nomeCompletoField.getText(),
                 postoBox.getValue(),
                 dataAdmissaoField.getValue().toString(),
@@ -61,6 +83,7 @@ public class CadastroController {
                 situacaoBox.getValue()
         );
 
+        // Se estiver editando -> atualiza | senão -> insere
         if (editando) {
             MilitaresController.atualizarMilitar(novo);
         } else {
@@ -80,4 +103,12 @@ public class CadastroController {
         stage.close();
     }
 
+    // Método auxiliar para mostrar alertas de erro
+    private void showAlerta(String titulo, String mensagem) {
+        Alert alerta = new Alert(Alert.AlertType.ERROR);
+        alerta.setTitle(titulo);
+        alerta.setHeaderText(null);
+        alerta.setContentText(mensagem);
+        alerta.showAndWait();
+    }
 }

@@ -84,5 +84,18 @@
     -fx-background-insets: 0;
 }
 
+.table-row-cell:filled:nth-child(even) {
+    -fx-background-color: #f2f2f2; /* Cinza claro */
+}
+
+.table-row-cell:filled:nth-child(odd) {
+    -fx-background-color: white; /* Branco */
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: -fx-background;
+}
+
+
 
 

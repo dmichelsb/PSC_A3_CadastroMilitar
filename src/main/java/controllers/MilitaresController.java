@@ -54,6 +54,22 @@ public class MilitaresController {
 
     @FXML
     public void initialize() {
+        tabelaMilitares.setRowFactory(tv -> new TableRow<Militar>() {
+            @Override
+            protected void updateItem(Militar item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setStyle("");
+                } else if (isSelected()) {
+                    // Quando selecionado, NÃO altera cor aqui, deixa o CSS decidir.
+                    setStyle("");
+                } else if (getIndex() % 2 == 0) {
+                    setStyle("-fx-background-color: #cccccc;");
+                } else {
+                    setStyle("-fx-background-color: white;");
+                }
+            }
+        });
         colSaram.setCellValueFactory(d -> d.getValue().saramProperty());
         colNome.setCellValueFactory(d -> d.getValue().nomeCompletoProperty());
         colPosto.setCellValueFactory(d -> d.getValue().postoProperty());
@@ -244,5 +260,12 @@ public class MilitaresController {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+
+
     }
+    public static ObservableList<Militar> getListaMilitares() {
+        return lista;
+    }
+
 }
