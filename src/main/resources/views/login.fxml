@@ -16,7 +16,7 @@
       </Label>
        <TextField fx:id="emailField" layoutX="342.0" layoutY="325.0" prefHeight="40.0" prefWidth="600.0" promptText="Email" />
        <PasswordField fx:id="senhaField" layoutX="342.0" layoutY="399.0" prefHeight="40.0" prefWidth="600.0" promptText="Senha" />
-       <Button layoutX="482.0" layoutY="500.0" onAction="#fazerLogin" prefHeight="61.0" prefWidth="313.0" style="-fx-background-color: #293219; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 8 16;" styleClass="botao-vidro" text="ENTRAR" />
+       <Button layoutX="482.0" layoutY="500.0" onAction="#fazerLogin" prefHeight="61.0" prefWidth="313.0" style="-fx-background-color: #006400; -fx-text-fill: white; -fx-background-radius: 20; -fx-border-radius: 20; -fx-padding: 8 16;" styleClass="botao-vidro" text="ENTRAR" />
       <Label layoutX="463.0" layoutY="26.0" text="Projeto A3 - PSC - Uniritter Canoas - 2025/1" textAlignment="CENTER" textFill="WHITE" underline="true">
          <font>
             <Font size="18.0" />
@@ -27,7 +27,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="1234.0" layoutY="688.0" text="v1.0" textFill="WHITE">
+      <Label layoutX="1234.0" layoutY="688.0" text="v2.2" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

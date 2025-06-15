@@ -1,8 +1,6 @@
 package database;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DB {
     private static final String URL = "jdbc:sqlite:militares.db";

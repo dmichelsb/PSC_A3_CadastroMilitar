@@ -1,8 +1,10 @@
+/* FUNDO PRINCIPAL */
 .anchor-pane {
     -fx-background-image: url("../images/camo.png");
     -fx-background-size: cover;
 }
 
+/* BOTÃO ESTILO VIDRO */
 .botao-vidro {
     -fx-background-color: rgba(255, 255, 255, 0.2);
     -fx-text-fill: white;
@@ -11,9 +13,6 @@
     -fx-border-color: white;
     -fx-border-width: 1.2;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 4, 0.2, 0, 1);
-    -fx-scale-x: 1;
-    -fx-scale-y: 1;
-    -fx-transition: all 0.2s ease-in-out; /* isso é ignorado em JavaFX, mas mantemos por clareza */
 }
 
 .botao-vidro:hover {
@@ -21,7 +20,7 @@
     -fx-scale-y: 1.1;
 }
 
-/* Tabela principal */
+/* TABELA */
 .table-view {
     -fx-background-color: white;
     -fx-background-radius: 20;
@@ -30,60 +29,21 @@
     -fx-padding: 0;
 }
 
-/* Cabeçalho da tabela */
+/* CABEÇALHO DA TABELA */
 .table-view .column-header-background {
-    -fx-background-color: transparent;
-    -fx-background-radius: 20 20 0 0; /* Arredonda só os cantos superiores */
-}
-
-/* Oculta o canto superior esquerdo de borda */
-.table-view .corner {
-    -fx-background-color: transparent;
-}
-
-/* Fundo que aparece no final da tabela */
-.table-view .filler {
-    -fx-background-color: transparent;
-}
-
-/* Linhas da tabela (mantém quadradas) */
-.table-view .table-row-cell {
-    -fx-background-radius: 0;
-    -fx-border-radius: 0;
-    -fx-background-insets: 0;
-    -fx-border-insets: 0;
-}
-
-/* Células da tabela (também quadradas) */
-.table-view .cell {
-    -fx-background-color: transparent;
-}
-
-
-
-/* Primeira célula de canto (canto superior esquerdo) */
-.tabela .column-header,
-.tabela .column-header .label {
+    -fx-background-color: white; /* Mesma cor do fundo */
     -fx-background-radius: 20 20 0 0;
-}
-
-/* Linha selecionada da TableView */
-.table-view .table-row-cell:filled:selected,
-.table-view .table-row-cell:filled:selected:hover {
-    -fx-background-color: #3e5133; /* Cor do fundo ao selecionar */
-    -fx-text-fill: white;          /* Cor do texto ao selecionar */
-}
-
-/* Texto das células selecionadas */
-.table-view .table-cell:selected {
-    -fx-text-fill: white;
-}
-
-/* Evita que fique com cor padrão ao focar */
-.table-view .table-row-cell:focused {
     -fx-background-insets: 0;
+    -fx-border-radius: 20 20 0 0;
 }
 
+/* CANTO SUPERIOR ESQUERDO DO CABEÇALHO */
+.table-view .corner {
+    -fx-background-radius: 20 0 0 0;
+    -fx-background-color: white; /* mesma cor do header */
+}
+
+/* LINHAS PARES E ÍMPARES */
 .table-row-cell:filled:nth-child(even) {
     -fx-background-color: #f2f2f2; /* Cinza claro */
 }
@@ -92,10 +52,50 @@
     -fx-background-color: white; /* Branco */
 }
 
-.table-row-cell:filled:selected {
-    -fx-background-color: -fx-background;
+/* LINHA SELECIONADA */
+.table-view .table-row-cell:filled:selected,
+.table-view .table-row-cell:filled:selected:hover {
+    -fx-background-color: #3e5133; /* Verde escuro da sua paleta */
+    -fx-text-fill: white;
+}
+
+.table-view .table-cell:selected {
+    -fx-text-fill: white;
+}
+
+/* REMOVER FUNDO EXTRA E GARANTIR TRANSIÇÃO SUAVE */
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .table-row-cell:focused {
+    -fx-background-insets: 0;
+}
+
+/* O container arredonda tudo */
+.table-container {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-padding: 5; /* Ajuste se quiser espaço interno */
+}
+
+/* A tabela em si fica transparente */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0;
+}
+
+/* Cabeçalho da tabela fica transparente */
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+/* Canto superior esquerdo invisível */
+.table-view .corner {
+    -fx-background-color: transparent;
 }
 
 
-
-
+/* REMOVER CLIPPING MANUAL DO STACKPANE — NÃO EXISTE PROPRIEDADE CSS PARA ISSO */
