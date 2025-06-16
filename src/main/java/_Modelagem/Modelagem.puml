@@ -1,82 +1,84 @@
 @startuml
+skinparam classAttributeIconSize 0
 
-package application {
-    class Main {
-        +start(Stage): void
-    }
+' ======= CLASSES PRINCIPAIS =======
+class Militar {
+  +saram: String
+  +nomeCompleto: String
+  +posto: String
+  +dataAdmissao: String
+  +cpf: String
+  +sexo: String
+  +dataNascimento: String
+  +naturalidade: String
+  +quadro: String
+  +unidade: String
+  +situacaoAtual: String
 }
 
-package controllers {
-    class LoginController {
-        -emailField: TextField
-        -senhaField: PasswordField
-        +fazerLogin(event): void
-        +irParaCadastro(event): void
-    }
-
-    class CadastroController {
-        -saramField: TextField
-        -nomeCompletoField: TextField
-        -postoBox: ComboBox
-        -dataAdmissaoField: DatePicker
-        -cpfField: TextField
-        -sexoBox: ComboBox
-        -dataNascimentoField: DatePicker
-        -naturalidadeField: TextField
-        -quadroBox: ComboBox
-        -unidadeField: TextField
-        -situacaoBox: ComboBox
-        -militar: Militar
-        -editando: boolean
-        +initialize(): void
-        +setMilitar(m: Militar): void
-        +salvar(): void
-        +cancelar(): void
-    }
-
-    class MilitaresController {
-        -filtroField: TextField
-        -tabelaMilitares: TableView
-        +initialize(): void
-        +carregarDados(): void
-        +adicionar(): void
-        +editar(): void
-        +remover(): void
-        +filtrar(): void
-        +limparFiltro(): void
-        +abrirFormulario(militar: Militar): void
-        +static inserirMilitar(m: Militar): void
-        +static atualizarMilitar(m: Militar): void
-    }
+class Missao {
+  +id: String
+  +tipo: String
+  +local: String
+  +dataInicio: String
+  +dataTermino: String
+  +status: String
+  +descricao: String
 }
 
-package models {
-    class Militar {
-        -saram: StringProperty
-        -nomeCompleto: StringProperty
-        -posto: StringProperty
-        -dataAdmissao: StringProperty
-        -cpf: StringProperty
-        -sexo: StringProperty
-        -dataNascimento: StringProperty
-        -naturalidade: StringProperty
-        -quadro: StringProperty
-        -unidade: StringProperty
-        -situacaoAtual: StringProperty
-        +getters/setters...
-    }
+class MilitarMissaoDAO {
+  +vincular(militarId, missaoId)
+  +buscarMissoesPorMilitar(militarId)
 }
 
-package database {
-    class DB {
-        +getConnection(): Connection
-    }
+class MilitarDAO {
+  +getAll()
+  +remover(saram)
 }
 
-Main --> LoginController
-LoginController --> CadastroController
-MilitaresController --> Militar
-CadastroController --> Militar
-MilitaresController --> DB
+class MissaoDAO {
+  +getAll()
+  +remover(id)
+}
+
+' ======= CONTROLLERS =======
+class MilitaresController {
+  +initialize()
+  +carregarDados()
+  +filtrar()
+  +limparFiltro()
+  +adicionar()
+  +editar()
+  +remover()
+  +carregarMissoes()
+  +adicionarMissao()
+  +editarMissao()
+  +removerMissao()
+  +vincularMissaoExistente()
+}
+
+class VincularMissaoController {
+  +initialize()
+  +setMilitarSaram(saram)
+  +vincular()
+  +adicionarTodos()
+  +removerTodos()
+  +excluirMissaoDoBanco()
+}
+
+' ======= RELACIONAMENTOS =======
+Militar "1" -- "0..*" MilitarMissaoDAO : vincula
+Missao "1" -- "0..*" MilitarMissaoDAO : vincula
+
+MilitaresController --> MilitarDAO
+MilitaresController --> MissaoDAO
+MilitaresController --> MilitarMissaoDAO
+MilitaresController --> VincularMissaoController
+
+VincularMissaoController --> MissaoDAO
+VincularMissaoController --> MilitarMissaoDAO
+VincularMissaoController --> MilitaresController
+
+Militar --> Missao : vinculo N:N (via tabela Militar_Missoes)
 
 @enduml

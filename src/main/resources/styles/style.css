@@ -20,82 +20,64 @@
     -fx-scale-y: 1.1;
 }
 
-/* TABELA */
-.table-view {
+/* CONTAINER DA TABELA ARREDONDADO */
+.table-container {
     -fx-background-color: white;
     -fx-background-radius: 20;
     -fx-border-radius: 20;
+    -fx-padding: 5;
+}
+
+/* TABELA: fundo transparente para seguir o container */
+.table-view {
+    -fx-background-color: transparent;
     -fx-border-color: transparent;
+    -fx-background-radius: 0;
     -fx-padding: 0;
 }
 
-/* CABEÇALHO DA TABELA */
+/* CABEÇALHO */
 .table-view .column-header-background {
-    -fx-background-color: white; /* Mesma cor do fundo */
+    -fx-background-color: transparent;
     -fx-background-radius: 20 20 0 0;
     -fx-background-insets: 0;
     -fx-border-radius: 20 20 0 0;
 }
 
-/* CANTO SUPERIOR ESQUERDO DO CABEÇALHO */
+/* CANTO SUPERIOR ESQUERDO */
 .table-view .corner {
+    -fx-background-color: transparent;
     -fx-background-radius: 20 0 0 0;
-    -fx-background-color: white; /* mesma cor do header */
 }
 
-/* LINHAS PARES E ÍMPARES */
+/* LINHAS ALTERNADAS */
 .table-row-cell:filled:nth-child(even) {
-    -fx-background-color: #f2f2f2; /* Cinza claro */
+    -fx-background-color: #f2f2f2; /* cinza claro */
 }
 
 .table-row-cell:filled:nth-child(odd) {
-    -fx-background-color: white; /* Branco */
+    -fx-background-color: white; /* branco */
 }
 
-/* LINHA SELECIONADA */
+/* LINHA SELECIONADA: verde militar */
 .table-view .table-row-cell:filled:selected,
 .table-view .table-row-cell:filled:selected:hover {
-    -fx-background-color: #3e5133; /* Verde escuro da sua paleta */
+    -fx-background-color: #3e5133;
     -fx-text-fill: white;
 }
 
+/* CÉLULAS SELECIONADAS: texto branco */
 .table-view .table-cell:selected {
     -fx-text-fill: white;
+    -fx-background-color: transparent; /* evitar fundo duplo */
 }
 
-/* REMOVER FUNDO EXTRA E GARANTIR TRANSIÇÃO SUAVE */
+/* FILLER SEM FUNDO */
 .table-view .filler {
     -fx-background-color: transparent;
 }
 
+/* REMOVER INSET FOCADO */
 .table-view .table-row-cell:focused {
     -fx-background-insets: 0;
 }
-
-/* O container arredonda tudo */
-.table-container {
-    -fx-background-color: white;
-    -fx-background-radius: 20;
-    -fx-border-radius: 20;
-    -fx-padding: 5; /* Ajuste se quiser espaço interno */
-}
-
-/* A tabela em si fica transparente */
-.table-view {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-background-radius: 0;
-}
-
-/* Cabeçalho da tabela fica transparente */
-.table-view .column-header-background {
-    -fx-background-color: transparent;
-}
-
-/* Canto superior esquerdo invisível */
-.table-view .corner {
-    -fx-background-color: transparent;
-}
-
-
-/* REMOVER CLIPPING MANUAL DO STACKPANE — NÃO EXISTE PROPRIEDADE CSS PARA ISSO */

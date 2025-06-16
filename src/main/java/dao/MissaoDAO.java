@@ -72,6 +72,30 @@ public class MissaoDAO {
         return ultimoId; // agora retorna o que foi capturado na inserção
     }
 
+    public List<Missao> getAll() {
+        List<Missao> lista = new ArrayList<>();
+        String sql = "SELECT * FROM Missoes";
+        try (Connection conn = DB.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                lista.add(new Missao(
+                        rs.getString("id"),
+                        rs.getString("tipo"),
+                        rs.getString("local"),
+                        rs.getString("dataInicio"),
+                        rs.getString("dataTermino"),
+                        rs.getString("status"),
+                        rs.getString("descricao")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
+    }
+
+
     public Missao getById(String id) {
         String sql = "SELECT * FROM Missoes WHERE id=?";
         try (Connection conn = DB.getConnection();
@@ -93,5 +117,8 @@ public class MissaoDAO {
             e.printStackTrace();
         }
         return null;
+
+
+
     }
 }

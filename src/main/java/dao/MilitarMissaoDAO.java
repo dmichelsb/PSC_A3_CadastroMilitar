@@ -12,17 +12,42 @@ import java.util.List;
 
 public class MilitarMissaoDAO {
 
-    public void vincular(String militarSaram, String missaoId) {
-        String sql = "INSERT INTO Militar_Missoes (militar_id, missao_id) VALUES (?, ?)";
-        try (Connection conn = DB.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, militarSaram);
-            stmt.setString(2, missaoId);
-            stmt.executeUpdate();
+    public void vincular(String militarId, String missaoId) {
+        String checkSQL = "SELECT 1 FROM Militar_Missoes WHERE militar_id = ? AND missao_id = ?";
+        String insertSQL = "INSERT INTO Militar_Missoes (militar_id, missao_id) VALUES (?, ?)";
+
+        try (Connection conn = DB.getConnection()) {
+            PreparedStatement checkStmt = conn.prepareStatement(checkSQL);
+            checkStmt.setString(1, militarId);
+            checkStmt.setString(2, missaoId);
+            ResultSet rs = checkStmt.executeQuery();
+            if (rs.next()) {
+                // Já existe => não insere de novo
+                return;
+            }
+
+            PreparedStatement insertStmt = conn.prepareStatement(insertSQL);
+            insertStmt.setString(1, militarId);
+            insertStmt.setString(2, missaoId);
+            insertStmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+
+    public void removerVinculo(String saram, String missaoId) {
+        try (Connection conn = DB.getConnection()) {
+            PreparedStatement ps = conn.prepareStatement(
+                    "DELETE FROM Militar_Missoes WHERE militar_id = ? AND missao_id = ?"
+            );
+            ps.setString(1, saram);
+            ps.setString(2, missaoId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public List<Missao> buscarMissoesPorMilitar(String militarSaram) {
         List<Missao> lista = new ArrayList<>();

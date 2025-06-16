@@ -27,7 +27,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label layoutX="1234.0" layoutY="688.0" text="v2.2" textFill="WHITE">
+      <Label layoutX="1234.0" layoutY="688.0" text="v2.3" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>

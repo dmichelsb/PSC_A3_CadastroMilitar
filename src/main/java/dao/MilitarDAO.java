@@ -4,7 +4,6 @@ import database.DB;
 import models.Militar;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.*;
 
 public class MilitarDAO {

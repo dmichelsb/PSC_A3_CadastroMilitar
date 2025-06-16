@@ -5,12 +5,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="45ebf9a9-0174-48f4-85a7-c16e2628d9e6" name="Changes" comment="feat: Tabelas Arredondadas">
+      <change afterPath="$PROJECT_DIR$/src/main/java/controllers/VincularMissaoController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/views/vincularMissao.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/militares.db" beforeDir="false" afterPath="$PROJECT_DIR$/militares.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/LoginController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/LoginController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/database/DB.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/database/DB.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/camo.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/camo.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/_Modelagem/Modelagem.puml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/_Modelagem/Modelagem.puml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MilitaresController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MilitaresController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/controllers/MissaoController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/controllers/MissaoController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/MilitarDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/MilitarDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/MilitarMissaoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/MilitarMissaoDAO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/dao/MissaoDAO.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/dao/MissaoDAO.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/styles/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/views/cadastroMissao.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/cadastroMissao.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/login.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/login.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/views/militares.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/views/militares.fxml" afterDir="false" />
     </list>
@@ -187,7 +193,9 @@
       <workItem from="1749648240219" duration="2677000" />
       <workItem from="1749780700131" duration="228000" />
       <workItem from="1749838080288" duration="4769000" />
-      <workItem from="1749914227309" duration="29390000" />
+      <workItem from="1749914227309" duration="30754000" />
+      <workItem from="1749995375935" duration="5183000" />
+      <workItem from="1750022730706" duration="13031000" />
     </task>
     <task id="LOCAL-00001" summary="feat: Novo Layout da tabela e botão de fazer logoff">
       <option name="closed" value="true" />
@@ -229,7 +237,15 @@
       <option name="project" value="LOCAL" />
       <updated>1749940807275</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="feat: Tabelas Arredondadas">
+      <option name="closed" value="true" />
+      <created>1749950953984</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1749950953984</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
